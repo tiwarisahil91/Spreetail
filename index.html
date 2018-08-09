@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Budget Management</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script>
+    $(document).ready(function() {
+      $('#product_table').DataTable( {
+        "pagingType": "full_numbers"
+      });
+    });
+    </script>
+    <style>
+    * {
+    box-sizing: border-box;
+  }
+      .column {
+    float: left;
+    padding: 20px;
+    height: 400px;
+    /*height: 300px;  Should be removed. Only for demonstration */
+  }
+
+  .left {
+    width: 25%;
+  }
+
+  .right {
+    width: 75%;
+  }
+
+/* Clear floats after the columns */
+  .row:after {
+      content: "";
+      display: table;
+    clear: both;
+  }
+      .menu {
+        height: 100px;
+        background-color: #B2D6FF;    /* Medium blue */
+      }
+
+      .sidebar {
+        padding-left: 50px;
+        padding-top: 50px;
+        float:left;
+        width: 300px;
+        height: 300px;
+        background-color: #F5CF8E;    /* Red */
+        box-sizing: border-box;
+      }
+
+      .content {
+        line-height: 1.9;
+        padding-left: 30%;
+        padding-top: 5%;
+        height: 600px;
+        background-color: #F5CF8E;    /* Yellow */
+      }
+
+      .footer {
+        height: 500px;
+        background-color: #D6E9FE;    /* Light blue */
+      }
+      img{
+        margin-top: 20px;
+        margin-left: 20px;
+        max-width: 100%;
+        max-height:100%;
+        /*width: inherit;*/
+      }
+      .accordion {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        transition: 0.4s;
+      }
+      .active, .accordion:hover {
+        background-color: #ccc;
+      }
+
+      .panel{
+        padding: 0 18px;
+        background-color: #F5CF8E;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+      }
+      .panel div{
+        padding-top: 2%;
+      }
+      label { width: 200px; float: left; margin: 0 20px 0 0; }
+  </style>
+  </head>
+  <body onload="func()">
+    <div class='page'>
+      <!--div class='menu'>Menu</div-->
+      <div class='sidebar'>
+        <img src='profile_image.jpg'></img> </div>
+      <div class='content'>
+          <div style="height:2em">
+            <label>Name :</label>
+            <label id="name"> Sahil Tiwari </label>
+          </div>
+          <div style="height:2em">
+            <label> Budget: </label>
+            <label id="budget_label"><font face="verdana" color="green"> $50</font></label>
+            <input id="budget_textbox" type="text">
+            <button id="update_budget" value="update" onclick="update_budget()">UPDATE</button>
+            <button id="save_budget" value="save" onclick="save_budget()">SAVE</button>
+            <button id="cancel_budget" value="cancel">CANCEL</button>
+          </div>
+          <div style="height:2em">
+            <label> Remaining Budget: </label>
+            <label id="remaining"><font face="verdana" color="red">$50</font></label>
+          </div>
+          <fieldset style="text-align:center">
+              <legend>Categorywise budget spent:</legend>
+              <div>
+              <fieldset style="width:475px; display:inline-block;">
+                <legend>Food:</legend>
+                 <div style="display:inline; float:left;">
+                  <label style="display:block;width:50px"><span> Budget:</span> </label>
+                  <label id="food_budget" style="width:50px"><font face="verdana" color="green">$0</font></label>
+                  <input style="width:50px" id="food_textbox" type="text">
+                </div>
+                  <label style="display:block;width:50px"> Remaining: </label>
+                  <label id="rem_food_budget" style="width:50px"><font face="verdana" color="red">$0</font></label>
+                  <button id="update_food" value="update" onclick="update_food()">UPDATE</button>
+                  <button id="save_food" value="save" onclick="save_food()">SAVE</button>
+                  <button id="cancel_food" value="cancel">CANCEL</button>
+              </fieldset>
+              <fieldset style="width:475px; display:inline-block;">
+                <legend>Clothes:</legend>
+                 <div style="display:inline; float:left;">
+                  <label style="display:block;width:50px"><span> Budget:</span> </label>
+                  <label id="clothes_budget" style="width:50px"><font face="verdana" color="green">$0</font></label>
+                  <input style="width:50px" id="clothes_textbox" type="text">
+                </div>
+                  <label style="display:block;width:50px"> Remaining: </label>
+                  <label id="rem_clothes_budget" style="width:50px"><font face="verdana" color="red">$0</font></label>
+                  <button id="update_clothes" value="update" onclick="update_clothes()">UPDATE</button>
+                  <button id="save_clothes" value="save" onclick="save_clothes()">SAVE</button>
+                  <button id="cancel_clothes" value="cancel">CANCEL</button>
+              </fieldset>
+              <fieldset style="width:450px; display:inline-block;">
+                <legend>Rent:</legend>
+                 <div style="display:inline; float:left;">
+                  <label style="display:block;width:50px"><span> Budget:</span> </label>
+                  <label id="rent_budget" style="width:50px"><font face="verdana" color="green">$0</font></label>
+                  <input style="width:50px" id="rent_textbox" type="text">
+                </div>
+                  <label style="display:block;width:50px"> Remaining: </label>
+                  <label id="rem_rent_budget" style="width:50px"><font face="verdana" color="red">$0</font></label>
+                  <button id="update_rent" value="update" onclick="update_rent()">UPDATE</button>
+                  <button id="save_rent" value="save" onclick="save_rent()">SAVE</button>
+                  <button id="cancel_rent" value="cancel">CANCEL</button>
+              </fieldset>
+              <fieldset style="width:450px; display:inline-block;">
+                <legend>Miscellaneous:</legend>
+                 <div style="display:inline; float:left;">
+                  <label style="display:block;width:50px">Budget:</label>
+                  <label id="misc_budget" style="width:50px"><font face="verdana" color="green">$0</font></label>
+                  <input style="width:50px" id="misc_textbox" type="text">
+                </div>
+                  <label style="display:block;width:50px"> Remaining: </label>
+                  <label id="rem_misc_budget" style="width:50px"><font face="verdana" color="red">$0</font></label>
+                  <button id="update_misc" value="update" onclick="update_misc()">UPDATE</button>
+                  <button id="save_misc" value="save" onclick="save_misc()">SAVE</button>
+                  <button id="cancel_misc" value="cancel">CANCEL</button>
+              </fieldset>
+            </div>
+          </fieldset>
+          <br>
+          <button class="accordion">+ Add a new budget</button>
+            <div class="panel">
+                <div style="display:inline; float:left;">
+                  <label style="width:80px">Description:</label>
+                  <input style="display:inline" id="desc" type="text" aria-required="true">
+                </div>
+                <div style="display:inline; float:left;">
+                  <label style="width:50px"></label>
+                </div>
+                <div style="display:inline; float:left;">
+                  <label style="width:80px">Category:</label>
+                  <select id="select_category" required>
+                    <option value="food">Food</option>
+                    <option value="clothes">Clothes</option>
+                    <option value="rent">Rent</option>
+                    <option value="miscellaneous">Miscellaneous</option>
+                  </select>
+                </div>
+                <div style="display:inline; float:left;">
+                  <label style="width:50px"></label>
+                </div>
+                <div style="display:table-cell;float:left;">
+                  <label style="width:100px">Amount(in $):</label>
+                  <input style="display:inline" id="amount" type="text" required>
+                </div>
+              <br><br>
+              <div style="text-align:center">
+                <button type="button" id="submit_desc" value="Submit Description" onclick="submit_details()">Submit</button>
+              </div>
+            </div>
+      </div>
+      <div class='footer'>
+        <div class="row">
+          <div class="column left" style="background-color:#aaa;">
+             <h2 align="center">Filter by given criteria</h2>
+            <form>
+              <label style="width:100px">Start Date:</label><input type="date" name="start_date">
+              <br><br>
+              <label style="width:100px">End Date:</label><input type="date" name="start_date">
+              <br><br>
+              <input style="text-align:center;" type="checkbox" name="resources" value="Food"> Food<br><br>
+              <input type="checkbox" name="resources" value="Clothes"> Clothes<br><br>
+              <input type="checkbox" name="resources" value="Rent"> Rent<br><br>
+              <input type="checkbox" name="resources" value="Miscellaneous"> Miscellaneous<br><br>
+              <input type="submit">
+            </form>
+          </div>
+          <div class="column right" style="background-color:#bbb;">
+            <!--h2>Column 2</h2>
+            <p>Some text..</p-->
+            <table id="product_table" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Budget Allocated</th>
+                <th>Type</th>
+                <th>Date of allocation</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+       function func()
+       {
+          document.getElementById("budget_textbox").style.display="none";
+          document.getElementById("save_budget").style.display="none";
+          document.getElementById("cancel_budget").style.display="none";
+          document.getElementById("food_textbox").style.display="none";
+          document.getElementById("save_food").style.display="none";
+          document.getElementById("cancel_food").style.display="none";
+          document.getElementById("clothes_textbox").style.display="none";
+          document.getElementById("save_clothes").style.display="none";
+          document.getElementById("cancel_clothes").style.display="none";
+          document.getElementById("rent_textbox").style.display="none";
+          document.getElementById("save_rent").style.display="none";
+          document.getElementById("cancel_rent").style.display="none";
+          document.getElementById("misc_textbox").style.display="none";
+          document.getElementById("save_misc").style.display="none";
+          document.getElementById("cancel_misc").style.display="none";
+       }
+       function httpGet()
+       {
+          var xmlHttp = new XMLHttpRequest();
+          var url = "http://127.0.0.1:3010";
+          xmlHttp.open( "GET", url, true ); // false for synchronous request
+          xmlHttp.send( null );
+          return xmlHttp.responseText;
+       }
+       function update_budget()
+       {
+          var val=document.getElementById("budget_label").textContent;
+          document.getElementById("budget_label").style.display="none";
+          document.getElementById("budget_textbox").style.display="";
+          document.getElementById("budget_textbox").value=val;
+          document.getElementById("update_budget").style.display="none";
+          document.getElementById("save_budget").style.display="";
+       }
+       function save_budget()
+       {
+         var label_val=document.getElementById("budget_textbox").value;
+         document.getElementById("budget_textbox").style.display="none";
+         document.getElementById("budget_label").style.display="";
+         document.getElementById("budget_label").textContent=label_val;
+         document.getElementById("budget_label").style.color="green";
+         document.getElementById("save_budget").style.display="none";
+         document.getElementById("update_budget").style.display="";
+       }
+       function update_food()
+       {
+          var val=document.getElementById("food_budget").textContent;
+          document.getElementById("food_budget").style.display="none";
+          document.getElementById("food_textbox").style.display="";
+          document.getElementById("food_textbox").value=val;
+          document.getElementById("update_food").style.display="none";
+          document.getElementById("save_food").style.display="";
+       }
+       function save_food()
+       {
+         var label_val=document.getElementById("food_textbox").value;
+         document.getElementById("food_textbox").style.display="none";
+         document.getElementById("food_budget").style.display="";
+         document.getElementById("food_budget").textContent=label_val;
+         document.getElementById("food_budget").style.color="green";
+         document.getElementById("save_food").style.display="none";
+         document.getElementById("update_food").style.display="";
+       }
+       function update_clothes()
+       {
+          var val=document.getElementById("clothes_budget").textContent;
+          document.getElementById("clothes_budget").style.display="none";
+          document.getElementById("clothes_textbox").style.display="";
+          document.getElementById("clothes_textbox").value=val;
+          document.getElementById("update_clothes").style.display="none";
+          document.getElementById("save_clothes").style.display="";
+       }
+       function save_clothes()
+       {
+         var label_val=document.getElementById("clothes_textbox").value;
+         document.getElementById("clothes_textbox").style.display="none";
+         document.getElementById("clothes_budget").style.display="";
+         document.getElementById("clothes_budget").textContent=label_val;
+         document.getElementById("clothes_budget").style.color="green";
+         document.getElementById("save_clothes").style.display="none";
+         document.getElementById("update_clothes").style.display="";
+       }
+       function update_rent()
+       {
+          var val=document.getElementById("rent_budget").textContent;
+          document.getElementById("rent_budget").style.display="none";
+          document.getElementById("rent_textbox").style.display="";
+          document.getElementById("rent_textbox").value=val;
+          document.getElementById("update_rent").style.display="none";
+          document.getElementById("save_rent").style.display="";
+       }
+       function save_rent()
+       {
+         var label_val=document.getElementById("rent_textbox").value;
+         document.getElementById("rent_textbox").style.display="none";
+         document.getElementById("rent_budget").style.display="";
+         document.getElementById("rent_budget").textContent=label_val;
+         document.getElementById("rent_budget").style.color="green";
+         document.getElementById("save_rent").style.display="none";
+         document.getElementById("update_rent").style.display="";
+       }
+       function update_misc()
+       {
+          var val=document.getElementById("misc_budget").textContent;
+          document.getElementById("misc_budget").style.display="none";
+          document.getElementById("misc_textbox").style.display="";
+          document.getElementById("misc_textbox").value=val;
+          document.getElementById("update_misc").style.display="none";
+          document.getElementById("save_misc").style.display="";
+       }
+       function save_misc()
+       {
+         var label_val=document.getElementById("misc_textbox").value;
+         document.getElementById("misc_textbox").style.display="none";
+         document.getElementById("misc_budget").style.display="";
+         document.getElementById("misc_budget").textContent=label_val;
+         document.getElementById("misc_budget").style.color="green";
+         document.getElementById("save_misc").style.display="none";
+         document.getElementById("update_misc").style.display="";
+       }
+       function submit_details()
+       {
+          var description=document.getElementById("desc").value;
+          var e=document.getElementById("select_category");
+          var selected_category=e.options[e.selectedIndex].text;
+          var amount=document.getElementById("amount").value;
+          var today = new Date();
+          var dd = today.getDate();
+          var mm = today.getMonth()+1;
+          var yyyy = today.getFullYear();
+
+          if(dd<10) {
+             dd = '0'+dd
+          }
+
+          if(mm<10) {
+             mm = '0'+mm
+          }
+          today = mm+'-'+dd +'-'+yyyy;
+          alert(today);
+          var obj = { "description": description, "category": selected_category, "amount": amount, "date":today };
+          var data = JSON.stringify(obj);
+          var http = new XMLHttpRequest();
+          //var url = "http://127.0.0.1:3000";
+          var url = "/";
+		      http.open("POST", url, true);
+      		http.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+      		http.onreadystatechange = function () {
+      		if (http.readyState == 4 && http.status == 200)
+      		{
+      		    var json = JSON.parse(http.responseText);
+      			console.log("Success");
+      		}
+      		}
+      		console.log("data:"+data);
+      		//var data = JSON.stringify({"email":"tomb@raider.com","name":"LaraCroft"});
+          document.getElementById("desc").value="";
+          document.getElementById("amount").value="";
+          document.getElementById("select_category").selectedIndex=0;
+              http.send(data);
+        }
+    </script>
+    <script>
+  var acc = document.getElementsByClassName("accordion");
+  var i;
+  for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var panel = this.nextElementSibling;
+      if (panel.style.maxHeight){
+        panel.style.maxHeight = null;
+      } else {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+      }
+    });
+  }
+  </script>
+  </body>
+</html>
